@@ -70,7 +70,7 @@ class MainActivity : ComponentActivity() {
 
 data class State(val food: Pair<Int, Int>, val snake: List<Pair<Int, Int>>)
 
-class Game(private val scope: CoroutineScope) {
+class Game(private val scope: CoroutineScope? = null) {
 
     private val mutex = Mutex()
     private val mutableState =
@@ -80,7 +80,7 @@ class Game(private val scope: CoroutineScope) {
 
     var move = Pair(1, 0)
         set(value) {
-            scope.launch {
+            scope?.launch {
                 mutex.withLock {
                     field = value
                 }
@@ -88,7 +88,7 @@ class Game(private val scope: CoroutineScope) {
         }
 
     init {
-        scope.launch {
+        scope?.launch {
             var snakeLength = 4
 
             while (true) {
@@ -202,7 +202,8 @@ fun Board(state: State) {
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
+    val game = Game()
     SnakeGameTheme {
-
+        Snake(game = game)
     }
 }
